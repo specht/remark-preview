@@ -5,7 +5,7 @@ export const htmlTemplate = (context, panel, html, fileName) => {
 
     const nonce = getNonce();
     return `<!doctype html>
-            <html lang="en">
+            <html lang="de">
             <head>
                 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${panel.webview.cspSource} 'self' 'unsafe-inline'; script-src 'nonce-${nonce}'; style-src ${panel.webview.cspSource} 'self' 'unsafe-inline'; font-src ${panel.webview.cspSource}">
 
@@ -14,22 +14,10 @@ export const htmlTemplate = (context, panel, html, fileName) => {
                 <meta id="vscode-html-preview-data" data-settings="${JSON.stringify(getInitialState()).replace(/"/g, '&quot;')}">
                 <script nonce="${nonce}" src="${getDynamicContentPath(context, panel, 'assets/js/main.js')}"></script>
                 <script nonce="${nonce}" src="${getDynamicContentPath(context, panel, 'assets/js/index.js')}"></script>
-                <link rel="stylesheet" type="text/css" href="${getDynamicContentPath(context, panel, 'assets/css/slds.css')}">
                 <link rel="stylesheet" type="text/css" href="${getDynamicContentPath(context, panel, 'assets/css/main.css')}">
-                <link rel="stylesheet" type="text/css" href="${getDynamicContentPath(context, panel, 'assets/css/admonitions.css')}">
             </head>
-            <body class="code-line" style="background-color: white;">
-                <main class="content home">
-                    <section>
-                        <body data-gr-c-s-loaded="true">
-                            <div class="slds-p-around--small slds-container--small">
-                                <article>
-                                ${html}     
-                                </article>
-                            </div>
-                        </body>
-                    </section>
-                </main>
+            <body>
+                ${html}     
             </body>
         </html>`
 };

@@ -28,10 +28,94 @@ export default class Preview {
         this.context = context;
     };
 
+    preprocess_agr(s) {
+        // mark agr spans
+        let t = '';
+        let within = false;
+        for (let i = 0; i < s.length; i++) {
+            let c = s.charAt(i);
+            let n = c.codePointAt(0);
+            if (within) {
+                if (!(n >= 0x0300 && n <= 0x03ff)) {
+                    within = false;
+                    t += '</span>';
+                }
+                t += c;
+                continue;
+            }
+            if (!within) {
+                if (n >= 0x0300 && n <= 0x03ff) {
+                    within = true;
+                    t += "<span class='agr'>";
+                }
+                t += c;
+            }
+        }
+
+        s = s.replace(/~/g, "<span class='hspace'></span>");
+
+        s = s.replace(/\\begin{box}/g, "<div markdown='1' class='box'>");
+        s = s.replace(/\\end{box}/g, "</div>");
+
+        s = s.replace(/_(.+?)_/g, function(a, b) {
+            return `<u>${b}</u>`;
+        });
+        s = s.replace(/%(.+?)%/g, function(a, b) {
+            return `<em>${b}</em>`;
+        });
+        s = s.replace(/\*(.+?)\*/g, function(a, b) {
+            return `<strong>${b}</strong>`;
+        });
+
+        // parse tables
+
+        s = s.replace(/\\begin\{table\}\{(.+?)\\end\{table\}/sg, function(a, x) {
+            x = x.replace('\\begin{table}{', '');
+            let cols = parseInt(x);
+            x = x.replace(/\d+\}/, '');
+            x = x.replace('\\end{table}', '');
+            x = x.trim();
+            let cells = x.split('\\\\');
+            cells.pop();
+            let result = "";
+            result += "<table>";
+            let i = 0;
+            for (let c of cells) {
+                if (c.trim() === '=') {
+                    result += `<tr><td colspan='${cols}' style='border: none;'></td></tr>`
+                    continue;
+                }
+                if (i % cols === 0)
+                    result += "<tr>";
+                let colspan = 1;
+                if (c.trim().match(/^x(\d+)/) !== null) {
+                    colspan = parseInt(c.trim().match(/^x(\d+)/)[1]);
+                    c = c.trim().replace(/^x(\d+)/, '');
+                }
+                if (colspan != 1) {
+                    result += `<td colspan='${colspan}'>${c.trim()}</td>`;
+                } else {
+                    result += `<td>${c.trim()}</td>`;
+                }
+                let ti = i + colspan;
+                while (i < ti) {
+                    if (i % cols === cols - 1)
+                        result += "</tr>";
+                    i += 1;
+                }
+            }
+            result += "</table>";
+            return result;
+        });
+
+        return s;
+    }
+
     async handleTextDocumentChange() {
         this.remarkViewerConfig = vscode.workspace.getConfiguration('remark');
         if (vscode.window.activeTextEditor && this.checkDocumentIsMarkdown(true) && this.panel && this.panel !== undefined) {
             let currentHTMLtext = vscode.window.activeTextEditor.document.getText();
+            currentHTMLtext = this.preprocess_agr(currentHTMLtext);
             const filePaths = vscode.window.activeTextEditor.document.fileName.split('/');
             const fileName = filePaths[filePaths.length - 1]
             this.panel.title = `[Preview] ${fileName}`;

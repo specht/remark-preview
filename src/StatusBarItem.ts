@@ -11,7 +11,7 @@ export default class StatusBarItem {
     constructor(context, utilities?: Preview) {
 
         this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-        this.statusBarItem.command = "remark.sidePreview";
+        this.statusBarItem.command = "agrmd.sidePreview";
         this.statusBarItem.tooltip = Constants.ExtensionConstants.STATUS_BAR_HTML_TOOLTIP;
         this.previewUtil = utilities && utilities || new Preview(context);
 
@@ -27,7 +27,7 @@ export default class StatusBarItem {
         // Update status if an markdown file:
         if (this.previewUtil.checkDocumentIsMarkdown(false)) {
             this.statusBarItem.text = Constants.ExtensionConstants.STATUS_BAR_HTML_TEXT;
-            this.statusBarItem.command = "remark.sidePreview";
+            this.statusBarItem.command = "agrmd.sidePreview";
             this.statusBarItem.show();
 
         } else {

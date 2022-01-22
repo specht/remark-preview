@@ -1,10 +1,10 @@
 {
-	"name": "remark-preview",
-	"displayName": "Remark Preview",
-	"description": "Preview your markdown file in VSCode as HTML using Remark processor.",
-	"version": "1.0.2",
+	"name": "agrmd-preview",
+	"displayName": "agrmd preview",
+	"description": "Altgriechisch-Markdown",
+	"version": "0.0.1",
 	"icon": "icon.png",
-	"publisher": "SubratThakur",
+	"publisher": "Michael Specht",
 	"engines": {
 		"vscode": "^1.48.0"
 	},
@@ -30,15 +30,15 @@
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "Remark Preview",
+			"title": "agrmd preview",
 			"order": 20,
 			"properties": {
-				"remark.preview.scrollPreviewWithEditor": {
+				"agrmd.preview.scrollPreviewWithEditor": {
 					"type": "boolean",
 					"default": true,
 					"description": "Scroll preview window when you scroll Editor"
 				},
-				"remark.preview.showPreviewOptionInMenuBar": {
+				"agrmd.preview.showPreviewOptionInMenuBar": {
 					"type": "boolean",
 					"default": false,
 					"description": "Show 'Preview to Side' option in Menu bar; if false then in Status bar"
@@ -47,7 +47,7 @@
 		},
 		"commands": [
 			{
-				"command": "remark.sidePreview",
+				"command": "agrmd.sidePreview",
 				"title": "Show side preview",
 				"category": "menubar",
 				"icon": {
@@ -56,7 +56,7 @@
 				}
 			},
 			{
-				"command": "remark.fullPreview",
+				"command": "agrmd.fullPreview",
 				"title": "Show full preview",
 				"category": "menubar",
 				"icon": {
@@ -68,22 +68,22 @@
 		"menus": {
 			"editor/title": [
 				{
-					"command": "remark.sidePreview",
-					"when": "editorLangId == markdown && config.remark.preview.showPreviewOptionInMenuBar",
-					"alt": "remark.fullPreview",
+					"command": "agrmd.sidePreview",
+					"when": "editorLangId == markdown && config.agrmd.preview.showPreviewOptionInMenuBar",
+					"alt": "agrmd.fullPreview",
 					"group": "navigation"
 				}
 			]
 		},
 		"keybindings": [
 			{
-				"command": "remark.sidePreview",
+				"command": "agrmd.sidePreview",
 				"key": "ctrl+q s",
 				"mac": "cmd+q s",
 				"when": "editorTextFocus"
 			},
 			{
-				"command": "remark.fullPreview",
+				"command": "agrmd.fullPreview",
 				"key": "ctrl+q f",
 				"mac": "cmd+q f",
 				"when": "editorTextFocus"
@@ -100,13 +100,15 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"dependencies": {
-		"remark": "12.0.1",
-		"path": "^0.12.7",
 		"lodash.throttle": "4.1.1",
+		"path": "^0.12.7",
+		"remark": "12.0.1",
 		"remark-admonitions": "1.2.1",
-		"remark-html": "12.0.0",
 		"remark-frontmatter": "^2.0.0",
+		"remark-html": "12.0.0",
+		"run": "^1.4.0",
 		"to-vfile": "^6.1.0",
+		"vsce": "^2.6.3",
 		"webpack": "4.19.0",
 		"webpack-cli": "3.1.0"
 	},

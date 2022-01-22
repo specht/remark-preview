@@ -11,13 +11,13 @@ export function activate(context: vscode.ExtensionContext) {
     // Subscribe so that the statusBarItem gets updated
     let disposableStatusBar = vscode.window.onDidChangeActiveTextEditor(statusBarItem.updateStatusbar, statusBarItem, context.subscriptions);
 
-    let disposableSidePreview = vscode.commands.registerCommand('remark.sidePreview', async () => {
+    let disposableSidePreview = vscode.commands.registerCommand('agrmd.sidePreview', async () => {
 
         await preview.initMarkdownPreview(vscode.ViewColumn.Two);
 
     });
 
-    let disposableStandalonePreview = vscode.commands.registerCommand('remark.fullPreview', async () => {
+    let disposableStandalonePreview = vscode.commands.registerCommand('agrmd.fullPreview', async () => {
 
         await preview.initMarkdownPreview(vscode.ViewColumn.One);
 
