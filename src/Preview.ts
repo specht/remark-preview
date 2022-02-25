@@ -34,6 +34,7 @@ export default class Preview {
         let within = false;
         for (let i = 0; i < s.length; i++) {
             let c = s.charAt(i);
+            c = c.normalize('NFD');
             let n = c.codePointAt(0);
             if (within) {
                 if (!(n >= 0x0300 && n <= 0x03ff)) {
@@ -53,9 +54,12 @@ export default class Preview {
         }
 
         s = s.replace(/~/g, "<span class='hspace'></span>");
+        s = s.replace(/  \n/g, "<br>");
 
-        s = s.replace(/\\begin{box}/g, "<div markdown='1' class='box'>");
-        s = s.replace(/\\end{box}/g, "</div>");
+        s = s.replace(/\\begin{box}/g, "<div class='table'><div markdown='1' class='box'>\n\n");
+        s = s.replace(/\\end{box}/g, "\n\n</div></div>");
+        s = s.replace(/\\begin{frame}/g, "<div class='table'><div markdown='1' class='frame'>\n\n");
+        s = s.replace(/\\end{frame}/g, "\n\n</div></div>");
 
         s = s.replace(/_(.+?)_/g, function(a, b) {
             return `<u>${b}</u>`;
@@ -68,7 +72,6 @@ export default class Preview {
         });
 
         // parse tables
-
         s = s.replace(/\\begin\{table\}\{(.+?)\\end\{table\}/sg, function(a, x) {
             x = x.replace('\\begin{table}{', '');
             let cols = parseInt(x);
@@ -78,33 +81,67 @@ export default class Preview {
             let cells = x.split('\\\\');
             cells.pop();
             let result = "";
-            result += "<table>";
+            result += "<div class='table'><table>";
             let i = 0;
+            let rowspan_items = [];
             for (let c of cells) {
+                c = c.trim();
                 if (c.trim() === '=') {
-                    result += `<tr><td colspan='${cols}' style='border: none;'></td></tr>`
+                    result += `<tr><td class='empty_row' colspan='${cols}' style='border: none;'></td></tr>`
                     continue;
                 }
+                let classes = [];
                 if (i % cols === 0)
                     result += "<tr>";
                 let colspan = 1;
-                if (c.trim().match(/^x(\d+)/) !== null) {
-                    colspan = parseInt(c.trim().match(/^x(\d+)/)[1]);
-                    c = c.trim().replace(/^x(\d+)/, '');
+                let rowspan = 1;
+                while (true) {
+                    if (c.trim().match(/^x(\d+)/) !== null) {
+                        colspan = parseInt(c.trim().match(/^x(\d+)/)[1]);
+                        c = c.trim().replace(/^x(\d+)/, '');
+                    } else if (c.trim().match(/^y(\d+)/) !== null) {
+                        rowspan = parseInt(c.trim().match(/^y(\d+)/)[1]);
+                        for (let i = 0; i < rowspan; i++) {
+                            if (rowspan_items.length <= i) rowspan_items.push(0);
+                            if (i > 0) rowspan_items[i] += colspan;
+                        }
+                        c = c.trim().replace(/^y(\d+)/, '');
+                    } else if (c.trim().charAt(0) === '@') {
+                        c = c.trim().substr(1).trim();
+                        classes.push('noborder');
+                    } else if (c.trim().charAt(0) === '!') {
+                        c = c.trim().substr(1).trim();
+                        classes.push('center');
+                    } else {
+                        break;
+                    }
                 }
-                if (colspan != 1) {
-                    result += `<td colspan='${colspan}'>${c.trim()}</td>`;
-                } else {
-                    result += `<td>${c.trim()}</td>`;
+
+                c = c.trim();
+
+                let tag = 'td';
+                if (c[0] === '>') {
+                    c = c.substr(1).trim();
+                    tag = 'th';
                 }
-                let ti = i + colspan;
-                while (i < ti) {
-                    if (i % cols === cols - 1)
+
+                result += `<${tag}`;
+                if (colspan != 1) result += ` colspan='${colspan}'`;
+                if (rowspan != 1) result += ` rowspan='${rowspan}'`;
+                if (classes.length > 0) result += ` class='${classes.join(' ')}'`;
+                result += `>${c.trim()}`;
+                result += '&#x200b;';
+                result += `</${tag}>\n`;
+                for (let k = 0; k < colspan; k++) {
+                    if (i % cols == cols - 1 - (rowspan_items[0] || 0)) {
                         result += "</tr>";
+                        rowspan_items.shift();
+                        i = -1;
+                    }
                     i += 1;
                 }
             }
-            result += "</table>";
+            result += "</table></div>";
             return result;
         });
 

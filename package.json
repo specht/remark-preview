@@ -2,9 +2,9 @@
 	"name": "agrmd-preview",
 	"displayName": "agrmd preview",
 	"description": "Altgriechisch-Markdown",
-	"version": "0.0.1",
+	"version": "0.0.7",
 	"icon": "icon.png",
-	"publisher": "Michael Specht",
+	"publisher": "nhcham",
 	"engines": {
 		"vscode": "^1.48.0"
 	},
@@ -16,11 +16,11 @@
 		"Other"
 	],
 	"bugs": {
-		"url": "https://github.com/SubratThakur/remark-preview/issues"
+		"url": "https://github.com/specht/remark-preview/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/SubratThakur/remark-preview"
+		"url": "https://github.com/specht/remark-preview"
 	},
 	"license": "MIT",
 	"activationEvents": [

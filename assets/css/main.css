@@ -32,8 +32,6 @@ body {
     font-size: 14pt;
     background-color: #fff;
     color: #000;
-    /* line-height: 140%; */
-    /* line-height: 24pt; */
 }
 p {
     margin: 0.5em 0;
@@ -42,56 +40,88 @@ p {
     border: 1px solid #888;
     padding: 0 0.5em;
     margin: 1em 0;
-    /* border-radius: 0.2em; */
-    /* background-color: #eee; */
-    /* background-color: #fff; */
-    /* box-shadow: 0 0 10px rgba(0,0,0,0.2); */
+    border-radius: 0.15em;
+}
+.frame {
+    border: 1px solid #888;
+    padding: 0 0.5em;
+    margin: 1em 0;
+    border-radius: 0.15em;
+    display: inline-block;
 }
 .agr {
     font-family: 'GFS Neohellenic';
-    /* font-size: 130%; */
-    /* padding: 0 0.2em; */
-    /* border-radius: 0.2em; */
-    /* cursor: pointer; */
+    font-size: 110%;
+    padding: 0 0.1em;
 }
-.agr ~ u + .agr {
-    /* margin: 0 -0.4em; */
-}
-/* .agr:hover {
-    background-color: #eee;
-    outline: 1px solid #aaa;
-} */
 .hspace {
     display: inline-block;
     width: 0.5em;
 }
-
 u {
     text-decoration-skip-ink: none;
 }
-
-u .agr {
-    /* background-color: #fce94f; */
+div.table {
+    overflow-x: auto;
+    width: 100%;
 }
+
 table {
     border-collapse: collapse;
-    font-size: 14pt;
-    /* line-height: 24pt; */
     display: block;
-    overflow-x: auto;
-    /* white-space: nowrap; */
 }
 
-table td {
+table td, table th {
     vertical-align: top;
     border: 1px solid #888;
     padding: 0.2em 0.5em;
+    text-align: left;
+    font-weight: normal;
+}
+
+table td.noborder, table th.noborder {
+    border: none;
+}
+
+table td.center, table th.center {
+    text-align: center;
+}
+
+table th {
+    background-color: #ddd;
+}
+
+.nowrap {
+    white-space: nowrap;
 }
 
 ol, ul {
     padding-left: 1.5em;
-    /* margin-bottom: 0; */
 }
+
 ol li, ul li {
     padding-left: 0.5em;
+}
+
+ol.alpha {
+    counter-reset: list;
+}
+ol.alpha > li {
+    list-style: none;
+    position: relative;
+}
+ol.alpha > li:before {
+    counter-increment: list;
+    content: counter(list, lower-alpha) ") ";
+    position: absolute;
+    left: -1.0em;
+}
+.hl {
+    background-color: #fce94f;
+}
+sup {
+    vertical-align: unset;
+    position:
+     relative;
+    top: -0.5em;
 }
