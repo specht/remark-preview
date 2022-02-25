@@ -35,6 +35,10 @@ body {
 }
 p {
     margin: 0.5em 0;
+    text-align: justify;
+}
+li {
+    text-align: justify;
 }
 .box {
     border: 1px solid #888;
@@ -64,6 +68,7 @@ u {
 div.table {
     overflow-x: auto;
     width: 100%;
+    margin-bottom: 0.5em;
 }
 
 table {
@@ -79,6 +84,15 @@ table td, table th {
     font-weight: normal;
 }
 
+.table.noborder {
+    position: relative;
+    left: -0.5em;
+}
+
+.table.noborder th, .table.noborder td {
+    border: none;
+}
+
 table td.noborder, table th.noborder {
     border: none;
 }
@@ -87,8 +101,17 @@ table td.center, table th.center {
     text-align: center;
 }
 
+table td.sticky, table th.sticky {
+    position: sticky;
+    left: 0;
+}
+
 table th {
-    background-color: #ddd;
+    background-color: #d3d7cf;
+}
+
+tr:nth-child(even) td {
+    background-color: #eeeeec;
 }
 
 .nowrap {
@@ -124,4 +147,15 @@ sup {
     position:
      relative;
     top: -0.5em;
+}
+
+.dt {
+    float: left;
+    clear: left;
+    width: 1.5em;
+}
+.dd {
+    margin-left: 1.5em;
+    padding: 0.5 0 0.5em 0;
+    margin-bottom: 0.2em;
 }

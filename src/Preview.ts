@@ -53,7 +53,8 @@ export default class Preview {
             }
         }
 
-        s = s.replace(/~/g, "<span class='hspace'></span>");
+        s = s.replace(/\s~\s/g, "<span class='hspace'></span>");
+        s = s.replace(/~/g, "&nbsp;");
         s = s.replace(/  \n/g, "<br>");
 
         s = s.replace(/\\begin{box}/g, "<div class='table'><div markdown='1' class='box'>\n\n");
@@ -70,18 +71,26 @@ export default class Preview {
         s = s.replace(/\*(.+?)\*/g, function(a, b) {
             return `<strong>${b}</strong>`;
         });
+        s = s.replace(/^(.+)\s\:\=\s(.+)$/gm, function(a, b, c) {
+            return `<div class='dt'>${b}</div><div class='dd'>${c}</div>`;
+        })
 
         // parse tables
         s = s.replace(/\\begin\{table\}\{(.+?)\\end\{table\}/sg, function(a, x) {
+            let result = '';
             x = x.replace('\\begin{table}{', '');
+            let borderless = false;
+            if (x[0] === '@') {
+                borderless = true;
+                x = x.substr(1);
+            }
             let cols = parseInt(x);
             x = x.replace(/\d+\}/, '');
             x = x.replace('\\end{table}', '');
             x = x.trim();
             let cells = x.split('\\\\');
             cells.pop();
-            let result = "";
-            result += "<div class='table'><table>";
+            result += `<div class='table ${borderless ? 'noborder': ''}'><table>`;
             let i = 0;
             let rowspan_items = [];
             for (let c of cells) {
@@ -95,6 +104,9 @@ export default class Preview {
                     result += "<tr>";
                 let colspan = 1;
                 let rowspan = 1;
+
+                let tag = 'td';
+
                 while (true) {
                     if (c.trim().match(/^x(\d+)/) !== null) {
                         colspan = parseInt(c.trim().match(/^x(\d+)/)[1]);
@@ -109,6 +121,12 @@ export default class Preview {
                     } else if (c.trim().charAt(0) === '@') {
                         c = c.trim().substr(1).trim();
                         classes.push('noborder');
+                    } else if (c.trim().charAt(0) === '>') {
+                        c = c.trim().substr(1).trim();
+                        tag = 'th';
+                    } else if (c.trim().charAt(0) === '$') {
+                        c = c.trim().substr(1).trim();
+                        classes.push('sticky');
                     } else if (c.trim().charAt(0) === '!') {
                         c = c.trim().substr(1).trim();
                         classes.push('center');
@@ -118,12 +136,6 @@ export default class Preview {
                 }
 
                 c = c.trim();
-
-                let tag = 'td';
-                if (c[0] === '>') {
-                    c = c.substr(1).trim();
-                    tag = 'th';
-                }
 
                 result += `<${tag}`;
                 if (colspan != 1) result += ` colspan='${colspan}'`;

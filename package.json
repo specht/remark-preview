@@ -2,7 +2,7 @@
 	"name": "agrmd-preview",
 	"displayName": "agrmd preview",
 	"description": "Altgriechisch-Markdown",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"icon": "icon.png",
 	"publisher": "nhcham",
 	"engines": {
