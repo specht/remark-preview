@@ -52,6 +52,7 @@ export default class Preview {
                 t += c;
             }
         }
+        s = t;
 
         s = s.replace(/\s~\s/g, "<span class='hspace'></span>");
         s = s.replace(/~/g, "&nbsp;");
@@ -80,9 +81,16 @@ export default class Preview {
             let result = '';
             x = x.replace('\\begin{table}{', '');
             let borderless = false;
-            if (x[0] === '@') {
-                borderless = true;
-                x = x.substr(1);
+            let zebra = false;
+            x = x.trim();
+            while (true) {
+                if (x[0] === '@') {
+                    borderless = true;
+                    x = x.substr(1).trim();
+                } else if (x[0] === 'z') {
+                    zebra = true;
+                    x = x.substr(1).trim();
+                } else break;
             }
             let cols = parseInt(x);
             x = x.replace(/\d+\}/, '');
@@ -90,7 +98,7 @@ export default class Preview {
             x = x.trim();
             let cells = x.split('\\\\');
             cells.pop();
-            result += `<div class='table ${borderless ? 'noborder': ''}'><table>`;
+            result += `<div class='table ${borderless ? 'noborder': ''} ${zebra ? 'zebra' : ''}'><table>`;
             let i = 0;
             let rowspan_items = [];
             for (let c of cells) {

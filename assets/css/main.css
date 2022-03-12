@@ -37,7 +37,10 @@ p {
     margin: 0.5em 0;
     text-align: justify;
 }
-li {
+table p {
+    text-align: left;
+}
+li, dd {
     text-align: justify;
 }
 .box {
@@ -57,6 +60,7 @@ li {
     font-family: 'GFS Neohellenic';
     font-size: 110%;
     padding: 0 0.1em;
+    background-color: #e9d4a7;
 }
 .hspace {
     display: inline-block;
@@ -72,7 +76,8 @@ div.table {
 }
 
 table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 1px;
     display: block;
 }
 
@@ -104,14 +109,23 @@ table td.center, table th.center {
 table td.sticky, table th.sticky {
     position: sticky;
     left: 0;
+    z-index: 1;
 }
 
 table th {
     background-color: #d3d7cf;
 }
 
-tr:nth-child(even) td {
+.zebra tr:nth-child(even) td {
     background-color: #eeeeec;
+}
+
+.zebra tr:nth-child(even) td.empty_row {
+    background-color: unset;
+}
+
+.zebra tr:nth-child(even) td.noborder {
+    background-color: unset;
 }
 
 .nowrap {
@@ -124,6 +138,7 @@ ol, ul {
 
 ol li, ul li {
     padding-left: 0.5em;
+    margin-bottom: 0.2em;
 }
 
 ol.alpha {
